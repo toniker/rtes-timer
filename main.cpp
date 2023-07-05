@@ -193,10 +193,9 @@ int main() {
         return (EXIT_FAILURE);
     }
     queue queue = *queue_ptr;
-    free(queue_ptr);
 
-    pthread_create(&producer, nullptr, &production, nullptr);
-    pthread_create(&consumer, nullptr, &consumption, nullptr);
+    pthread_create(&producer, nullptr, &production, queue_ptr);
+    pthread_create(&consumer, nullptr, &consumption, queue_ptr);
 
     deleteQueue(&queue);
     return 0;
