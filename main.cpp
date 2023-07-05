@@ -142,7 +142,7 @@ void* production(void *arg) {
 
     auto q_ptr = static_cast<queue *>(arg);
     auto q = *q_ptr;
-    free(q_ptr);
+    timeval lastCallTime, currentTime{};
 
     for (uint8_t i = 0; i < NumberOfJobs; i++) {
         workArray[i].arg = &angle;
@@ -156,7 +156,9 @@ void* production(void *arg) {
 
         pthread_mutex_unlock(q.mutex);
         useconds_t sleepDuration = 1'000'000;
+        gettimeofday(&lastCallTime, nullptr);
         usleep(sleepDuration);
+        gettimeofday(&currentTime, nullptr);
     }
 
     return nullptr;
