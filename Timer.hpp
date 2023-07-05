@@ -8,9 +8,11 @@ private:
     timeval start{};
     timeval end{};
     timeval difference{};
+    int data{};
 
 public:
-    Timer() {
+    Timer(int (*StartFcn)()) {
+        data = StartFcn();
         if (gettimeofday(&start, nullptr)) {
             std::cout << "Error during timer creation" << std::endl;
         }

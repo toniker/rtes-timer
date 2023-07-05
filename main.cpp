@@ -1,12 +1,54 @@
 #include <iostream>
 #include <cmath>
+#include <cstdint>
 #include <pthread.h>
 #include <unistd.h>
 #include <sys/time.h>
 
+#include "Timer.hpp"
+
 inline constexpr uint8_t QueueSize = 10;
 inline constexpr uint8_t NumberOfJobs = 5;
 
+inline constexpr int initialize()
+{
+    return 2;
+}
+
+/**
+ * The delay between function calls, in milliseconds.
+*/
+inline constexpr uint16_t Period = 20;
+/**
+ * How many times the TimerFcn will be executed.
+*/
+inline constexpr uint8_t TasksToExecute = 20;
+/**
+ * Delay before the first call to TimerFcn.
+*/
+inline constexpr uint16_t StartDelay = 50;
+/**
+ * The function that will be called during the Timer constructor for data initialization
+*/
+inline constexpr int (*StartFcn)() = {initialize};
+/**
+ * The function that will be called after the last TimerFcn call.
+*/
+inline constexpr uint16_t StopFcn = 20;
+/**
+ * The function that will be called periodically.
+*/
+inline constexpr uint16_t TimerFcn = 20;
+/**
+ * The function that will be called if the task queue is full.
+*/
+inline constexpr uint16_t ErrorFcn = 20;
+/**
+ * Pointer to user data
+*/
+inline constexpr uint16_t UserData = 20;
+
+ 
 void calculate_sin(double *arg) {
     double angle = *arg;
     *arg = sin(angle);
