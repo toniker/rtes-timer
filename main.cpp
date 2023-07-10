@@ -84,17 +84,17 @@ public:
 private:
     static void *ProducerThreadFuncHelper(void *arg) {
         auto timer = static_cast<Timer *>(arg);
-        timer->ProducerThreadFunc();
+        timer->produce();
         return nullptr;
     }
 
     static void *ConsumerThreadFuncHelper(void *arg) {
         auto timer = static_cast<Timer *>(arg);
-        timer->ConsumerThreadFunc();
+        timer->consume();
         return nullptr;
     }
 
-    void ProducerThreadFunc() {
+    void produce() {
         while (running) {
             timeval currentTime{};
             gettimeofday(&currentTime, nullptr);
@@ -124,7 +124,7 @@ private:
         }
     }
 
-    void ConsumerThreadFunc() {
+    void consume() {
         while (running) {
             workFunction task;
 
