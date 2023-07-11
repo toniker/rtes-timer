@@ -14,18 +14,12 @@ struct workFunction {
 
 class Timer {
 public:
-    Timer(int _period, int _tasksToExecute, int _startDelay, StartFcn _startFcn, StopFcn _stopFcn,
-          TimerFcn _timerFcn, ErrorFcn _errorFcn, void *_userData)
-            : period(_period),
-              tasksToExecute(_tasksToExecute),
-              startDelay(_startDelay),
-              startFcn(std::move(_startFcn)),
-              stopFcn(std::move(_stopFcn)),
-              timerFcn(std::move(_timerFcn)),
-              errorFcn(std::move(_errorFcn)),
-              userData(_userData),
-              running(false),
-              taskCount(0) {
+    Timer(int _period, int _tasksToExecute, int _startDelay, StartFcn _startFcn, StopFcn _stopFcn, TimerFcn _timerFcn,
+          ErrorFcn _errorFcn, void *_userData) : period(_period), tasksToExecute(_tasksToExecute),
+                                                 startDelay(_startDelay), startFcn(std::move(_startFcn)),
+                                                 stopFcn(std::move(_stopFcn)), timerFcn(std::move(_timerFcn)),
+                                                 errorFcn(std::move(_errorFcn)), userData(_userData), running(false),
+                                                 taskCount(0) {
         if (startDelay > 0)
             std::this_thread::sleep_for(std::chrono::seconds(startDelay));
     }
@@ -143,7 +137,7 @@ private:
                 continue;
             }
 
-            auto data = static_cast<double*>(task.userData);
+            auto data = static_cast<double *>(task.userData);
             task.timerFcn(data);
         }
     }
@@ -169,8 +163,8 @@ private:
 };
 
 int main() {
-    int period = 50; // milliseconds
-    int tasksToExecute = 5;
+    int period = 10; // milliseconds
+    int tasksToExecute = 10;
     int startDelay = 1; // seconds
     StartFcn startFcn = MyStartFcn;
     StopFcn stopFcn = MyStopFcn;
@@ -180,10 +174,10 @@ int main() {
     ErrorFcn errorFcn = MyErrorFcn;
 
     Timer timer(period, tasksToExecute, startDelay, startFcn, stopFcn, timerFcn, errorFcn, userData);
-    timer.Start();
+//    timer.Start();
 
     // Start the timer at a specific time
-//    timer.StartAt(2023, 7, 10, 16, 37, 0);
+    timer.StartAt(2023, 7, 11, 20, 23, 30);
 
     // Wait for the timer to finish
     std::this_thread::sleep_for(std::chrono::seconds(10));
