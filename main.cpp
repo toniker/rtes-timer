@@ -52,6 +52,7 @@ public:
         targetTime.tm_hour = hour;
         targetTime.tm_min = minute;
         targetTime.tm_sec = second;
+        targetTime.tm_isdst = 1;
 
         time_t targetTimestamp = mktime(&targetTime);
         long long targetMillis = targetTimestamp * 1000LL;
