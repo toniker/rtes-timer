@@ -184,10 +184,11 @@ int main() {
     ErrorFcn errorFcn = MyErrorFcn;
 
     Timer timer(period, tasksToExecute, startDelay, startFcn, stopFcn, timerFcn, errorFcn, userData);
-//    timer.Start();
+    // Start the timer now
+    timer.Start();
 
     // Start the timer at a specific time
-    timer.StartAt(2023, 7, 11, 20, 23, 30);
+//    timer.StartAt(2023, 7, 11, 20, 23, 30);
 
     // Wait for the timer to finish
     std::this_thread::sleep_for(std::chrono::hours (1));
