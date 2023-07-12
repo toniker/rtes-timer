@@ -173,8 +173,8 @@ private:
 };
 
 int main() {
-    int period = 1000; // milliseconds
-    constexpr int tasksToExecute = 3600 / 0.01;
+    constexpr int period = 1000; // milliseconds
+    constexpr int tasksToExecute = 3600 * 1000 / period;
     int startDelay = 1; // seconds
     StartFcn startFcn = MyStartFcn;
     StopFcn stopFcn = MyStopFcn;
