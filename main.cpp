@@ -106,10 +106,9 @@ private:
 
             if (currentTimestamp >= nextExecutionTime) {
                 if (taskCount < tasksToExecute) {
-                    drift = currentTimestamp - nextExecutionTime;
                     workFunction task;
                     task.timerFcn = timerFcn;
-                    task.userData = &drift;
+                    task.userData = &currentTimestamp;
 
                     pthread_mutex_lock(&queueMutex);
                     taskQueue.push(task);
@@ -125,7 +124,6 @@ private:
             } else {
                 long long timeToSleep = nextExecutionTime - currentTimestamp;
                 usleep(timeToSleep * 1000);
-//                std::this_thread::sleep_for(std::chrono::milliseconds(timeToSleep));
             }
         }
     }
@@ -172,7 +170,6 @@ private:
     bool running;
     int taskCount;
     long long nextExecutionTime;
-    long long drift = 0;
 };
 
 int main() {
