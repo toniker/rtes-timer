@@ -37,8 +37,15 @@ public:
         if (startFcn)
             startFcn();
 
-        pthread_create(&producerThread, nullptr, &Timer::ProducerThreadFuncHelper, this);
-        pthread_create(&consumerThread, nullptr, &Timer::ConsumerThreadFuncHelper, this);
+        /*
+         * Set the lowest macOS Quality of Service class.
+         */
+        pthread_attr_t qosAttribute{};
+        pthread_attr_init(&qosAttribute);
+        pthread_attr_set_qos_class_np(&qosAttribute, QOS_CLASS_BACKGROUND, 0);
+
+        pthread_create(&producerThread, &qosAttribute, &Timer::ProducerThreadFuncHelper, this);
+        pthread_create(&consumerThread, &qosAttribute, &Timer::ConsumerThreadFuncHelper, this);
     }
 
     void StartAt(int year, int month, int day, int hour, int minute, int second) {
