@@ -2,14 +2,14 @@
 
 #include <iostream>
 
-typedef std::function<void(double* arg)> TimerFcn;
+typedef std::function<void(long long* arg)> TimerFcn;
 typedef std::function<void()> StartFcn;
 typedef std::function<void()> StopFcn;
 typedef std::function<void()> ErrorFcn;
 
-void MyTimerFcn(const double* arg) {
+void MyTimerFcn(const long long* arg) {
     auto data = *arg;
-    std::cout << "Received data = " << data << std::endl;
+    std::cout << "Caclulated Drift = " << data << std::endl;
 }
 
 void MyStartFcn() {

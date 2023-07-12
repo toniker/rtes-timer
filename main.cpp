@@ -4,6 +4,7 @@
 #include <pthread.h>
 #include <thread>
 #include <utility>
+#include <unistd.h>
 
 #include "main.hpp"
 
@@ -19,7 +20,7 @@ public:
                                                  startDelay(_startDelay), startFcn(std::move(_startFcn)),
                                                  stopFcn(std::move(_stopFcn)), timerFcn(std::move(_timerFcn)),
                                                  errorFcn(std::move(_errorFcn)), userData(_userData), running(false),
-                                                 taskCount(0) {
+                                                 taskCount(0), nextExecutionTime(0) {
         if (startDelay > 0)
             std::this_thread::sleep_for(std::chrono::seconds(startDelay));
     }
@@ -92,14 +93,16 @@ private:
     void produce() {
         while (running) {
             timeval currentTime{};
+
             gettimeofday(&currentTime, nullptr);
             long long currentTimestamp = currentTime.tv_sec * 1000LL + currentTime.tv_usec / 1000LL;
 
             if (currentTimestamp >= nextExecutionTime) {
                 if (taskCount < tasksToExecute) {
+                    drift = currentTimestamp - nextExecutionTime;
                     workFunction task;
                     task.timerFcn = timerFcn;
-                    task.userData = userData;
+                    task.userData = &drift;
 
                     pthread_mutex_lock(&queueMutex);
                     taskQueue.push(task);
@@ -114,7 +117,8 @@ private:
                 }
             } else {
                 long long timeToSleep = nextExecutionTime - currentTimestamp;
-                std::this_thread::sleep_for(std::chrono::milliseconds(timeToSleep));
+                usleep(timeToSleep * 1000);
+//                std::this_thread::sleep_for(std::chrono::milliseconds(timeToSleep));
             }
         }
     }
@@ -138,7 +142,7 @@ private:
                 continue;
             }
 
-            auto data = static_cast<double *>(task.userData);
+            auto data = static_cast<long long *>(task.userData);
             task.timerFcn(data);
         }
     }
@@ -161,11 +165,12 @@ private:
     bool running;
     int taskCount;
     long long nextExecutionTime;
+    long long drift = 0;
 };
 
 int main() {
-    int period = 10; // milliseconds
-    int tasksToExecute = 10;
+    int period = 1000; // milliseconds
+    constexpr int tasksToExecute = 3600 / 0.01;
     int startDelay = 1; // seconds
     StartFcn startFcn = MyStartFcn;
     StopFcn stopFcn = MyStopFcn;
@@ -181,7 +186,7 @@ int main() {
     timer.StartAt(2023, 7, 11, 20, 23, 30);
 
     // Wait for the timer to finish
-    std::this_thread::sleep_for(std::chrono::seconds(10));
+    std::this_thread::sleep_for(std::chrono::hours (1));
 
     return 0;
 }
